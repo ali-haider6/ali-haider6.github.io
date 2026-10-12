@@ -296,6 +296,9 @@ main,footer{position:relative;z-index:1}
 .cred.live,.channel.live{background:color-mix(in srgb,var(--accent) 8%,transparent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);transform:translateY(-2px)}
 .channel.live .ico{background:var(--accent);color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.case.live,.cred.live,.channel.live,.svc.live h3{transform:none}}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
 footer{padding-block:30px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .f-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -663,6 +666,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
   </div>
 </footer>
 
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (function(){
   var header = document.querySelector('header'), btn = document.getElementById('menu-btn');
@@ -816,6 +820,17 @@ document.querySelectorAll('.case').forEach(function(card){
   }
   function req(){ if(!ticking){ ticking=true; requestAnimationFrame(pick); } }
   addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); req();
+})();
+(function(){
+  if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lenis=new Lenis({duration:1.2, easing:function(t){return Math.min(1,1.001-Math.pow(2,-10*t));}, smoothWheel:true});
+  function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href'); var el=id.length>1 && document.querySelector(id); if(!el) return;
+      e.preventDefault(); lenis.scrollTo(el,{offset:-64, duration:1.4});
+    });
+  });
 })();
 document.querySelectorAll('.copy').forEach(function(btn){
   btn.addEventListener('click', function(){
