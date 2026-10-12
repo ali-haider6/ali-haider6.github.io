@@ -278,12 +278,9 @@ html.anim .photo.rv{transform:translateY(18px) scale(.97)}
 html.anim .photo.rv.in{transform:none}
 .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .orb{position:absolute;width:44vmax;height:44vmax;border-radius:50%;filter:blur(80px);will-change:transform,opacity}
-.orb.o1{background:var(--accent);top:-14vmax;left:-12vmax;opacity:.07}
-.orb.o2{background:var(--mark);bottom:-16vmax;right:-14vmax;opacity:.05}
+.orb.o1{background:var(--accent);top:-14vmax;left:-12vmax;opacity:.1}
+.orb.o2{background:var(--mark);bottom:-16vmax;right:-14vmax;opacity:.1}
 main,footer{position:relative;z-index:1}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .orb.o1{opacity:.12}:root:not([data-theme="light"]) .orb.o2{opacity:.08}}
-:root[data-theme="dark"] .orb.o1{opacity:.12}
-:root[data-theme="dark"] .orb.o2{opacity:.08}
 .case.live{border-color:color-mix(in srgb,var(--accent) 50%,transparent);transform:translateY(-3px);box-shadow:0 14px 32px -20px color-mix(in srgb,var(--accent) 70%,transparent)}
 .case.live::before{opacity:1}
 .case.live .tag{background:var(--accent);color:var(--bg)}
