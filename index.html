@@ -276,6 +276,14 @@ html.anim .rv{opacity:0;transform:translateY(26px);transition:opacity .75s ease 
 html.anim .rv.in{opacity:1;transform:none}
 html.anim .photo.rv{transform:translateY(18px) scale(.97)}
 html.anim .photo.rv.in{transform:none}
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;width:44vmax;height:44vmax;border-radius:50%;filter:blur(80px);will-change:transform,opacity}
+.orb.o1{background:var(--accent);top:-14vmax;left:-12vmax;opacity:.13}
+.orb.o2{background:var(--mark);bottom:-16vmax;right:-14vmax;opacity:.10}
+main,footer{position:relative;z-index:1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .orb.o1{opacity:.22}:root:not([data-theme="light"]) .orb.o2{opacity:.16}}
+:root[data-theme="dark"] .orb.o1{opacity:.22}
+:root[data-theme="dark"] .orb.o2{opacity:.16}
 footer{padding-block:30px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .f-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -291,6 +299,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
 <body>
 
 
+<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span></div>
 <header>
   <div class="wrap">
     <a class="brand" href="#home">Ali Haider<span>.</span></a>
@@ -761,6 +770,25 @@ document.querySelectorAll('.case').forEach(function(card){
     },{threshold:.4});
     so.observe(stats);
   }
+})();
+(function(){
+  var o1=document.querySelector('.orb.o1'), o2=document.querySelector('.orb.o2'); if(!o1) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lastY=scrollY, vel=0, boost=0, ticking=false;
+  function frame(){
+    var h=Math.max(1,document.documentElement.scrollHeight-innerHeight), p=scrollY/h;
+    var w=innerWidth, vh=innerHeight;
+    boost += (Math.min(Math.abs(vel)/60,1) - boost)*0.12; vel*=0.85;
+    var s=1+boost*0.25;
+    o1.style.transform='translate3d('+(p*w*0.55)+'px,'+(p*vh*0.9)+'px,0) scale('+s+')';
+    o2.style.transform='translate3d('+(-p*w*0.5)+'px,'+(-p*vh*0.8)+'px,0) scale('+s+')';
+    o1.style.filter='blur(80px) brightness('+(1+boost*0.6)+')';
+    o2.style.filter='blur(80px) brightness('+(1+boost*0.6)+')';
+    if(boost>0.002 || Math.abs(vel)>0.5){ requestAnimationFrame(frame); } else { ticking=false; }
+  }
+  addEventListener('scroll',function(){ vel=scrollY-lastY; lastY=scrollY; if(!ticking){ ticking=true; requestAnimationFrame(frame);} },{passive:true});
+  addEventListener('resize',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame);} });
+  ticking=true; requestAnimationFrame(frame);
 })();
 document.querySelectorAll('.copy').forEach(function(btn){
   btn.addEventListener('click', function(){
